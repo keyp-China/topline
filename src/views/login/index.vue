@@ -68,8 +68,7 @@ export default {
         return
       }
       // 登录loading
-      // const toast = this.$toast.loading({
-      this.$toast.loading({
+      const toast = this.$toast.loading({
         duration: 0, // 持续展示 toast
         forbidClick: true, // 禁用背景点击
         loadingType: 'spinner',
@@ -83,9 +82,12 @@ export default {
         // 本地存储
         setItem('user', data)
         this.$toast.success('登录成功')
+        this.$router.push('/home')
       } catch (err) {
-        // toast.clear() // 清楚loading
-        this.$toast.fail('手机号或者验证码错误')
+        toast.clear()
+        if (err.response && err.response.status === 400) {
+          this.$toast.fail('登录失败，手机号或验证码错误')
+        }
       }
     }
   }
