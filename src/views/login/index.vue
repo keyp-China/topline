@@ -3,11 +3,39 @@
     <!-- 导航栏 -->
     <van-nav-bar title="登录" />
 
-    <!-- 输入框 -->
-    <van-cell-group>
-      <van-field v-model="user.mobile" label="手机号" placeholder="请输入手机号" required />
-      <van-field v-model="user.code" label="验证码" placeholder="请输入验证码" type="password" required />
-    </van-cell-group>
+    <!-- 登录表单 -->
+    <ValidationObserver ref="loginForm">
+      <!-- 输入框 -->
+      <van-cell-group>
+        <!--  ValidationProvider
+          name 提示的文本
+          rules 验证规则
+          v-slot="{ errors }" 获取校验结果数据
+          errors[0] 读取校验结果的失败信息
+        -->
+        <ValidationProvider name="手机号" rules="required|phone" v-slot="{ errors }">
+          <van-field
+            v-model="user.mobile"
+            label="手机号"
+            placeholder="请输入手机号"
+            required
+            clearable
+            :error-message="errors[0]"
+          />
+        </ValidationProvider>
+        <ValidationProvider name="验证码" rules="required|max:6" v-slot="{ errors }">
+          <van-field
+            v-model="user.code"
+            label="验证码"
+            placeholder="请输入验证码"
+            type="password"
+            required
+            clearable
+            :error-message="errors[0]"
+          />
+        </ValidationProvider>
+      </van-cell-group>
+    </ValidationObserver>
 
     <!-- 按钮 -->
     <div class="btn-wrap">
@@ -32,13 +60,19 @@ export default {
   methods: {
     // 登录
     async onLogin () {
+      // 表单验证
+      const isValid = await this.$refs.loginForm.validate()
+      // 如果验证失败，阻止表单提交
+      if (!isValid) {
+        return
+      }
       // 登录loading
-    //   const toast = this.$toast.loading({
+      // const toast = this.$toast.loading({
       this.$toast.loading({
         duration: 0, // 持续展示 toast
         forbidClick: true, // 禁用背景点击
         loadingType: 'spinner',
-        message: '登陆中'
+        message: '登录中'
       })
       try {
         const { data } = await login(this.user)

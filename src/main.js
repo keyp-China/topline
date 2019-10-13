@@ -5,7 +5,9 @@ import store from './store'
 
 import '@/styles/index.less' // 导入全局样式
 
-import '@/utils/vant.js' // vant提取
+import '@/utils/vant' // vant提取
+
+import '@/utils/veeValidate' // vee-validate校验规则
 
 Vue.config.productionTip = false
 
