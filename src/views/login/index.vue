@@ -46,6 +46,7 @@
 
 <script>
 import { login } from '@/api/user'
+import { setItem } from '@/utils/storage'
 
 export default {
   name: 'LoginIndex',
@@ -77,7 +78,10 @@ export default {
       try {
         const { data } = await login(this.user)
         // toast.clear() // 清楚loading
-        console.log(data)
+        // vuex容器存储
+        this.$store.commit('setUser', data)
+        // 本地存储
+        setItem('user', data)
         this.$toast.success('登录成功')
       } catch (err) {
         // toast.clear() // 清楚loading
