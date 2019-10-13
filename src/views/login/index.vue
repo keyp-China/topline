@@ -30,14 +30,28 @@ export default {
   },
   methods: {
     // 登录
-    doLogin () {
-      request({
-        url: '/app/v1_0/authorizations',
-        method: 'post',
-        data: this.user
-      }).then(res => {
-        console.log(res)
+    async doLogin () {
+      // 登录loading
+    //   const toast = this.$toast.loading({
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true, // 禁用背景点击
+        loadingType: 'spinner',
+        message: '登陆中'
       })
+      try {
+        const { data } = await request({
+          url: '/app/v1_0/authorizations',
+          method: 'post',
+          data: this.user
+        })
+        // toast.clear() // 清楚loading
+        console.log(data)
+        this.$toast.success('登录成功')
+      } catch (err) {
+        // toast.clear() // 清楚loading
+        this.$toast.fail('手机号或者验证码错误')
+      }
     }
   }
 }

@@ -2,10 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-// 导入全局样式
-import './styles/index.less'
 
-import './vant.js'
+import './styles/index.less' // 导入全局样式
+
+import './vant.js' // vant提取
 
 Vue.config.productionTip = false
 
