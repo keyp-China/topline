@@ -3,7 +3,7 @@ import jsonBig from 'json-bigint'
 
 const request = axios.create({
   // 设置默认axios请求地址
-  baseURL: 'http://ttapi.research.itcast.cn'
+  baseURL: 'http://ttapi.research.itcast.cn/app/v1_0'
 })
 
 /**

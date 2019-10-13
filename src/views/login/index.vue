@@ -11,26 +11,27 @@
 
     <!-- 按钮 -->
     <div class="btn-wrap">
-      <van-button type="info" @click="doLogin">登录</van-button>
+      <van-button type="info" @click="onLogin">登录</van-button>
     </div>
   </div>
 </template>
 
 <script>
-import request from '@/utils/request'
+import { login } from '@/api/user'
+
 export default {
   name: 'LoginIndex',
   data () {
     return {
       user: {
-        mobile: '13911111111',
-        code: '246810'
+        mobile: '13911111111', // 手机号
+        code: '246810' // 验证码
       }
     }
   },
   methods: {
     // 登录
-    async doLogin () {
+    async onLogin () {
       // 登录loading
     //   const toast = this.$toast.loading({
       this.$toast.loading({
@@ -40,11 +41,7 @@ export default {
         message: '登陆中'
       })
       try {
-        const { data } = await request({
-          url: '/app/v1_0/authorizations',
-          method: 'post',
-          data: this.user
-        })
+        const { data } = await login(this.user)
         // toast.clear() // 清楚loading
         console.log(data)
         this.$toast.success('登录成功')
