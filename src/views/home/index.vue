@@ -5,46 +5,59 @@
 
     <!-- 频道列表 -->
     <van-tabs v-model="active">
-      <van-tab title="标签 1">
+      <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id">
         <!-- 文章列表 -->
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-          <van-cell v-for="item in list" :key="item" :title="item" />
+        <van-list v-model="channel.loading" :finished="channel.finished" finished-text="没有更多了" @load="onLoad">
+          <van-cell v-for="item in channel.articles" :key="item" :title="item" />
         </van-list>
       </van-tab>
-      <van-tab title="标签 2">内容 2</van-tab>
-      <van-tab title="标签 3">内容 3</van-tab>
-      <van-tab title="标签 4">内容 4</van-tab>
     </van-tabs>
   </div>
 </template>
 
 <script>
+import { getChannels } from '@/api/channels'
 export default {
   name: 'HomeIndex',
   data () {
     return {
       active: 0,
-      list: [],
-      loading: false,
-      finished: false
+      channels: [] // 频道列表
     }
   },
   methods: {
     onLoad () {
+      const channel = this.channels[this.active]
       // 异步更新数据
       setTimeout(() => {
+        console.log('load....')
+
         for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
+          channel.articles.push(channel.articles.length + 1 + channel.name)
         }
         // 加载状态结束
-        this.loading = false
+        channel.loading = false
 
         // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true
+        if (channel.articles.length >= 40) {
+          channel.finished = true
         }
-      }, 500)
+      }, 1000)
+    },
+
+    // 获取用户默认推荐的频道列表
+    async getChannels () {
+      const { data } = await getChannels()
+      data.channels.forEach(channel => {
+        channel.articles = [] // 频道的文章列表
+        channel.loading = false // 频道的上拉加载更多的 loading 状态
+        channel.finished = false // 频道的加载结束的状态
+      })
+      this.channels = data.channels
     }
+  },
+  created () {
+    this.getChannels()
   }
 }
 </script>

@@ -4,7 +4,7 @@ import store from '@/store'
 
 const request = axios.create({
   // 设置默认axios请求地址
-  baseURL: 'http://ttapi.research.itcast.cn/app/v1_0'
+  baseURL: 'http://ttapi.research.itcast.cn'
 })
 
 /**
@@ -32,7 +32,7 @@ request.interceptors.request.use(function (config) {
 /**
 * 响应拦截器
 */
-axios.interceptors.response.use(function (response) {
+request.interceptors.response.use(function (response) {
   // 对响应数据做处理
   return response.data
 })

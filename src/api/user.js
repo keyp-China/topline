@@ -1,12 +1,15 @@
+/**
+ * 用户api模块
+ */
 import request from '@/utils/request'
-import api from '@/constant/api'
 
 /**
  * 登录
  */
 export function login (data) {
   return request({
-    url: api.API_LOGIN,
+    url: '/app/v1_0/authorizations',
     method: 'post',
-    data })
+    data
+  })
 }
