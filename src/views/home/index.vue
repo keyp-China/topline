@@ -60,7 +60,7 @@
           <van-button type="danger" size="mini">编辑</van-button>
         </van-cell>
         <van-grid :gutter="10">
-          <van-grid-item v-for="value in 8" :key="value" text="文字" />
+          <van-grid-item v-for="(channel,index) in channels" :key="index" :text="channel.name" />
         </van-grid>
       </div>
 
@@ -68,7 +68,7 @@
       <div>
         <van-cell title="频道推荐"></van-cell>
         <van-grid :gutter="10">
-          <van-grid-item v-for="value in 8" :key="value" text="文字" />
+          <van-grid-item v-for="(channel,index) in getRecommendedChannels" :key="index" :text="channel.name" />
         </van-grid>
       </div>
     </van-popup>
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { getChannels } from '@/api/channel'
+import { getChannels, getAllChannels } from '@/api/channel'
 import { getArticles } from '@/api/article'
 export default {
   name: 'HomeIndex',
@@ -84,8 +84,9 @@ export default {
   data () {
     return {
       active: 0, // 控制当前激活的标签页
-      channels: [], // 频道列表
-      isPopupShow: false // 频道弹出层是否显示
+      channels: [], // 我的频道列表
+      isPopupShow: false, // 频道弹出层是否显示
+      channelsAll: [] // 全部的频道列表
     }
   },
 
@@ -145,11 +146,33 @@ export default {
         channel.pullRefreshLoading = false // 下拉刷新状态
       })
       this.channels = data.channels
+    },
+
+    // 获取全部的频道列表
+    async getAllChannels () {
+      const { data } = await getAllChannels()
+      this.channelsAll = data.channels
+    }
+
+  },
+
+  computed: {
+    // 获取剩余的推荐频道
+    getRecommendedChannels () {
+      const channels = []
+      this.channelsAll.forEach(channel => {
+        const index = this.channels.findIndex(item => item.id === channel.id)
+        if (index === -1) {
+          channels.push(channel)
+        }
+      })
+      return channels
     }
   },
 
   created () {
     this.loadChannels()
+    this.getAllChannels()
   }
 }
 </script>
