@@ -1,7 +1,7 @@
 <template>
   <div class='home'>
     <!-- 导航栏 -->
-    <van-nav-bar title="首页" />
+    <van-nav-bar title="首页" fixed/>
 
     <!-- 频道列表 带切换动画和滑动切换-->
     <van-tabs v-model="active" animated swipeable>
@@ -123,6 +123,7 @@ export default {
 
 <style lang='less' scoped>
 .home {
+  // 文章详情
   .article-info {
     display: flex;
     align-items: center;
@@ -130,6 +131,19 @@ export default {
     .meta span {
       margin-right: 10px;
     }
+  }
+
+  // 频道导航样式
+  .van-tabs /deep/ .van-tabs__wrap--scrollable {
+    position: fixed;
+    top: 46px;
+    left: 0;
+    right: 16px;
+    z-index: 2;
+  }
+  .van-tabs /deep/ .van-tabs__content {
+    margin-top: 90px;
+    margin-bottom: 50px;
   }
 }
 </style>
