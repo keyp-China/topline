@@ -6,10 +6,22 @@
     <!-- 频道列表 -->
     <van-tabs v-model="active">
       <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id">
-        <!-- 文章列表 -->
-        <van-list v-model="channel.loading" :finished="channel.finished" finished-text="没有更多了" @load="onLoad">
-          <van-cell v-for="article in channel.articles" :key="article.art_id.toString()" :title="article.title" />
-        </van-list>
+        <!-- 下拉刷新 -->
+        <van-pull-refresh v-model="channel.pullRefreshLoading" @refresh="onRefresh">
+          <!-- 文章列表 -->
+          <van-list
+            v-model="channel.loading"
+            :finished="channel.finished"
+            finished-text="没有更多了"
+            @load="onLoad"
+          >
+            <van-cell
+              v-for="article in channel.articles"
+              :key="article.art_id.toString()"
+              :title="article.title"
+            />
+          </van-list>
+        </van-pull-refresh>
       </van-tab>
     </van-tabs>
   </div>
@@ -29,7 +41,24 @@ export default {
   },
 
   methods: {
-    // 加载文章数据
+    // 下拉刷新加载文章数据
+    async onRefresh () {
+      const channel = this.channels[this.active]
+      // 1.发送获取文章请求
+      const { data } = await getArticles({
+        channelId: channel.id,
+        timestamp: Date.now(),
+        withTop: 1
+      })
+      // 2.将文章放入频道中
+      channel.articles.unshift(...data.results)
+      // 3.加载状态结束
+      channel.pullRefreshLoading = false
+      // 4.提示刷新成功
+      this.$toast('刷新成功')
+    },
+
+    // 上划加载文章数据
     async onLoad () {
       const channel = this.channels[this.active]
 
@@ -64,6 +93,7 @@ export default {
         channel.loading = false // 频道的上拉加载更多的 loading 状态
         channel.finished = false // 频道的加载结束的状态
         channel.timestamp = null // 时间戳
+        channel.pullRefreshLoading = false // 下拉刷新状态
       })
       this.channels = data.channels
     }
