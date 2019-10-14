@@ -15,7 +15,8 @@ import {
   List, // 列表
   Grid, // 宫格
   GridItem,
-  Image
+  Image, // 图片
+  Lazyload // 图片懒加载
 } from 'vant'
 
 Vue
@@ -34,3 +35,4 @@ Vue
   .use(Grid)
   .use(GridItem)
   .use(Image)
+  .use(Lazyload)
