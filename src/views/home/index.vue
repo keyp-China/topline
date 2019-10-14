@@ -1,10 +1,14 @@
 <template>
-  <div class='home'>
+  <div class="home">
     <!-- 导航栏 -->
-    <van-nav-bar title="首页" fixed/>
+    <van-nav-bar title="首页" fixed />
 
     <!-- 频道列表 带切换动画和滑动切换-->
     <van-tabs v-model="active" animated swipeable>
+      <!-- 面包按钮 -->
+      <div slot="nav-right" class="wap-nav" @click="isPopupShow = true">
+        <van-icon name="wap-nav" size="24" />
+      </div>
       <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id">
         <!-- 下拉刷新 -->
         <van-pull-refresh v-model="channel.pullRefreshLoading" @refresh="onRefresh">
@@ -40,6 +44,15 @@
         </van-pull-refresh>
       </van-tab>
     </van-tabs>
+    <!-- 频道操作弹出层 -->
+    <van-popup
+      v-model="isPopupShow"
+      round
+      position="bottom"
+      :style="{ height: '95%' }"
+      closeable
+      close-icon-position="top-left"
+    />
   </div>
 </template>
 
@@ -52,7 +65,8 @@ export default {
   data () {
     return {
       active: 0, // 控制当前激活的标签页
-      channels: [] // 频道列表
+      channels: [], // 频道列表
+      isPopupShow: false // 频道弹出层是否显示
     }
   },
 
@@ -144,6 +158,16 @@ export default {
   .van-tabs /deep/ .van-tabs__content {
     margin-top: 90px;
     margin-bottom: 50px;
+  }
+
+  //面包按钮
+  .wap-nav {
+    position: sticky;
+    right: 0;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    opacity: 0.8;
   }
 }
 </style>
