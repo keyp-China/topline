@@ -1,25 +1,41 @@
 <template>
-  <div>
+  <div class='home'>
     <!-- 导航栏 -->
     <van-nav-bar title="首页" />
 
-    <!-- 频道列表 -->
+    <!-- 频道列表 带切换动画和滑动切换-->
     <van-tabs v-model="active" animated swipeable>
       <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id">
         <!-- 下拉刷新 -->
         <van-pull-refresh v-model="channel.pullRefreshLoading" @refresh="onRefresh">
-          <!-- 文章列表 -->
+          <!-- 文章列表 带下拉加载-->
           <van-list
             v-model="channel.loading"
             :finished="channel.finished"
             finished-text="没有更多了"
             @load="onLoad"
           >
+            <!-- 单元格渲染文章详情 -->
             <van-cell
-              v-for="article in channel.articles"
-              :key="article.art_id.toString()"
+              v-for="(article,index) in channel.articles"
+              :key="index"
               :title="article.title"
-            />
+            >
+              <div slot="label">
+                <van-grid :border="false" :column-num="3">
+                  <van-grid-item v-for="(img, index) in article.cover.images" :key="index">
+                    <van-image height="80" :src="img" />
+                  </van-grid-item>
+                </van-grid>
+                <div class="article-info">
+                  <div class="meta">
+                    <span>{{ article.aut_name }}</span>
+                    <span>{{ article.comm_count }}评论</span>
+                    <span>{{ article.pubdate }}</span>
+                  </div>
+                </div>
+              </div>
+            </van-cell>
           </van-list>
         </van-pull-refresh>
       </van-tab>
@@ -105,5 +121,15 @@ export default {
 }
 </script>
 
-<style>
+<style lang='less' scoped>
+.home {
+  .article-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .meta span {
+      margin-right: 10px;
+    }
+  }
+}
 </style>

@@ -12,7 +12,10 @@ import {
   Tab, // 标签页
   Tabs,
   PullRefresh, // 下拉刷新
-  List // 列表
+  List, // 列表
+  Grid, // 宫格
+  GridItem,
+  Image
 } from 'vant'
 
 Vue
@@ -28,3 +31,6 @@ Vue
   .use(Tabs)
   .use(PullRefresh)
   .use(List)
+  .use(Grid)
+  .use(GridItem)
+  .use(Image)
