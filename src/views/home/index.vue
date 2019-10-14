@@ -46,13 +46,32 @@
     </van-tabs>
     <!-- 频道操作弹出层 -->
     <van-popup
+      class="channel-container"
       v-model="isPopupShow"
       round
       position="bottom"
-      :style="{ height: '95%' }"
+      :style="{ height: '90%' }"
       closeable
       close-icon-position="top-left"
-    />
+    >
+      <!-- 我的频道 -->
+      <div>
+        <van-cell title="我的频道">
+          <van-button type="danger" size="mini">编辑</van-button>
+        </van-cell>
+        <van-grid :gutter="10">
+          <van-grid-item v-for="value in 8" :key="value" text="文字" />
+        </van-grid>
+      </div>
+
+      <!-- 频道推荐 -->
+      <div>
+        <van-cell title="频道推荐"></van-cell>
+        <van-grid :gutter="10">
+          <van-grid-item v-for="value in 8" :key="value" text="文字" />
+        </van-grid>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -148,16 +167,18 @@ export default {
   }
 
   // 频道导航样式
-  .van-tabs /deep/ .van-tabs__wrap--scrollable {
-    position: fixed;
-    top: 46px;
-    left: 0;
-    right: 16px;
-    z-index: 2;
-  }
-  .van-tabs /deep/ .van-tabs__content {
-    margin-top: 90px;
-    margin-bottom: 50px;
+  .van-tabs {
+    /deep/ .van-tabs__wrap--scrollable {
+      position: fixed;
+      top: 46px;
+      left: 0;
+      right: 16px;
+      z-index: 2;
+    }
+    /deep/ .van-tabs__content {
+      margin-top: 90px;
+      margin-bottom: 50px;
+    }
   }
 
   //面包按钮
@@ -168,6 +189,16 @@ export default {
     align-items: center;
     background-color: #fff;
     opacity: 0.8;
+  }
+
+  // 频道弹窗样式
+  .channel-container {
+    padding-top: 30px;
+    .close-icon {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+    }
   }
 }
 </style>
