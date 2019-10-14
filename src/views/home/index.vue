@@ -4,7 +4,7 @@
     <van-nav-bar title="首页" />
 
     <!-- 频道列表 -->
-    <van-tabs v-model="active">
+    <van-tabs v-model="active" animated swipeable>
       <van-tab :title="channel.name" v-for="channel in channels" :key="channel.id">
         <!-- 下拉刷新 -->
         <van-pull-refresh v-model="channel.pullRefreshLoading" @refresh="onRefresh">
