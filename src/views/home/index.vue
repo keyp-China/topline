@@ -68,7 +68,12 @@
       <div>
         <van-cell title="频道推荐"></van-cell>
         <van-grid :gutter="10">
-          <van-grid-item v-for="(channel,index) in getRecommendedChannels" :key="index" :text="channel.name" />
+          <van-grid-item
+            v-for="(channel,index) in getRecommendedChannels"
+            :key="index"
+            :text="channel.name"
+            @click="clickRecommended(channel)"
+          />
         </van-grid>
       </div>
     </van-popup>
@@ -86,7 +91,8 @@ export default {
       active: 0, // 控制当前激活的标签页
       channels: [], // 我的频道列表
       isPopupShow: false, // 频道弹出层是否显示
-      channelsAll: [] // 全部的频道列表
+      channelsAll: [], // 全部的频道列表
+      isEdit: false // 是否编辑模式
     }
   },
 
@@ -152,8 +158,13 @@ export default {
     async getAllChannels () {
       const { data } = await getAllChannels()
       this.channelsAll = data.channels
-    }
+    },
 
+    // 点击推荐频道
+    clickRecommended (channel) {
+      channel.articles = []
+      this.channels.push(channel)
+    }
   },
 
   computed: {
