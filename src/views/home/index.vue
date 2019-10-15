@@ -57,10 +57,12 @@
       <!-- 我的频道 -->
       <div>
         <van-cell title="我的频道">
-          <van-button type="danger" size="mini">编辑</van-button>
+          <van-button type="danger" size="mini" @click="isEdit = !isEdit">{{ isEdit ? '完成' : '编辑' }}</van-button>
         </van-cell>
         <van-grid :gutter="10">
-          <van-grid-item v-for="(channel,index) in channels" :key="index" :text="channel.name" />
+          <van-grid-item v-for="(channel,index) in channels" :key="index" :text="channel.name">
+             <van-icon v-show="isEdit" class="close-icon" slot="icon" name="close" />
+          </van-grid-item>
         </van-grid>
       </div>
 
@@ -234,5 +236,12 @@ export default {
       right: -5px;
     }
   }
+}
+
+// close图标
+.close-icon {
+  position: absolute;
+  top: -5px;
+  right: -5px;
 }
 </style>
