@@ -60,8 +60,13 @@
           <van-button type="danger" size="mini" @click="isEdit = !isEdit">{{ isEdit ? '完成' : '编辑' }}</van-button>
         </van-cell>
         <van-grid :gutter="10">
-          <van-grid-item v-for="(channel,index) in channels" :key="index" :text="channel.name">
-             <van-icon v-show="isEdit" class="close-icon" slot="icon" name="close" />
+          <van-grid-item
+            v-for="(channel,index) in channels"
+            :key="index"
+            :text="channel.name"
+            @click="clickMyChannel(index)"
+          >
+            <van-icon v-show="isEdit" class="close-icon" slot="icon" name="close" />
           </van-grid-item>
         </van-grid>
       </div>
@@ -164,8 +169,28 @@ export default {
 
     // 点击推荐频道
     clickRecommended (channel) {
-      channel.articles = []
+      channel.articles = [] // 频道的文章列表
+      channel.loading = false // 频道的上拉加载更多的 loading 状态
+      channel.finished = false // 频道的加载结束的状态
+      channel.timestamp = null // 时间戳
+      channel.pullRefreshLoading = false // 下拉刷新状态
       this.channels.push(channel)
+    },
+
+    // 点击我的频道
+    clickMyChannel (index) {
+      if (this.isEdit) {
+        if (this.channels.length === 1) {
+          this.$toast('最后一个频道不可删除')
+          this.isEdit = false
+          return
+        }
+        // 删除我的频道
+        this.channels.splice(index, 1)
+      } else {
+        this.active = index // 跳转到点击频道
+        this.isPopupShow = false // 弹出层取消展示
+      }
     }
   },
 
@@ -204,7 +229,7 @@ export default {
 
   // 频道导航样式
   .van-tabs {
-    /deep/ .van-tabs__wrap--scrollable {
+    /deep/ .van-tabs__wrap {
       position: fixed;
       top: 46px;
       left: 0;
