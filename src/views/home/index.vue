@@ -66,7 +66,7 @@
             :text="channel.name"
             @click="clickMyChannel(index)"
           >
-            <van-icon v-show="isEdit" class="close-icon" slot="icon" name="close" />
+            <van-icon v-show="isEdit" v-if="channel.id!=0" class="close-icon" slot="icon" name="close" />
           </van-grid-item>
         </van-grid>
       </div>
@@ -180,9 +180,8 @@ export default {
     // 点击我的频道
     clickMyChannel (index) {
       if (this.isEdit) {
-        if (this.channels.length === 1) {
-          this.$toast('最后一个频道不可删除')
-          this.isEdit = false
+        if (index === 0) {
+          // 推荐不可删除
           return
         }
         // 删除我的频道
