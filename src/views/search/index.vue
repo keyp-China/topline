@@ -29,13 +29,18 @@
     <van-cell-group v-else>
       <van-cell title="历史记录">
         <template v-if="isDelete">
-          <span>全部删除</span>&nbsp;&nbsp;&nbsp;
+          <span @click="searchHistory=[]">全部删除</span>&nbsp;&nbsp;&nbsp;
           <span @click="isDelete = false">完成</span>
         </template>
         <van-icon name="delete" @click="isDelete = true" v-else />
       </van-cell>
-      <van-cell title="搜索记录">
-        <van-icon name="close" v-show="isDelete"/>
+      <van-cell
+        :title="item"
+        v-for=" (item,index) in searchHistory"
+        :key="index"
+        @click="clickHistory(item)"
+      >
+        <van-icon name="close" v-show="isDelete" @click.stop="searchHistory.splice(index,1)" />
       </van-cell>
     </van-cell-group>
   </div>
@@ -43,6 +48,7 @@
 
 <script>
 import { searchSuggestion } from '@/api/search'
+import { getItem, setItem } from '@/utils/storage'
 
 export default {
   name: 'SearchIndex',
@@ -50,16 +56,40 @@ export default {
     return {
       searchValue: '', // 搜索值
       suggestionList: [], // 联想建议
-      isDelete: false // 是否删除状态
+      isDelete: false, // 是否删除状态
+      searchHistory: getItem('search_history') || [] // 搜索历史记录
     }
   },
-
+  watch: {
+    searchHistory (newVal) {
+      // 本地化存储
+      setItem('search_history', newVal)
+    }
+  },
   methods: {
     // 搜索
     onSearch () {
+      // 判断搜索内容是否为空
       if (this.searchValue.trim()) {
+        // 本次搜索是否在搜索记录中
+        const index = this.searchHistory.indexOf(this.searchValue)
+        if (index !== -1) {
+          // 在记录中则删除
+          this.searchHistory.splice(index, 1)
+        }
+        // 将本次搜索添加到历史记录中
+        this.searchHistory.unshift(this.searchValue)
+        // 本地化存储(watch这里不起作用 因为下面路由跳转后watch还没触发)
+        setItem('search_history', this.searchHistory)
+        // 路由跳转
         this.$router.push(`/search/${this.searchValue}`)
       }
+    },
+
+    // 点击历史记录跳转
+    clickHistory (item) {
+      this.searchValue = item
+      this.onSearch()
     },
 
     // 联想记录查询
