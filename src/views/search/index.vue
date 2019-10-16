@@ -15,22 +15,27 @@
 
     <!-- 联想建议 -->
     <van-cell-group>
-      <van-cell icon="search" v-for="(item,index) in suggestionList" :key="index">
-          <div slot="title" v-html="highLight(item)"></div>
+      <van-cell
+        icon="search"
+        v-for="(item,index) in suggestionList"
+        :key="index"
+        @click="clickSuggestion(item)"
+      >
+        <div slot="title" v-html="highLight(item)"></div>
       </van-cell>
     </van-cell-group>
 
     <!-- 搜索记录 -->
     <van-cell-group>
       <van-cell title="历史记录">
-          <template>
-            <span>全部删除</span>&nbsp;&nbsp;&nbsp;
-            <span>完成</span>
-          </template>
-          <van-icon name="delete" />
+        <template>
+          <span>全部删除</span>&nbsp;&nbsp;&nbsp;
+          <span>完成</span>
+        </template>
+        <van-icon name="delete" />
       </van-cell>
       <van-cell title="搜索记录">
-          <van-icon name="close" />
+        <van-icon name="close" />
       </van-cell>
     </van-cell-group>
   </div>
@@ -51,7 +56,7 @@ export default {
   methods: {
     // 搜索
     onSearch () {
-      console.log('onSearch')
+      this.$router.push(`/search/${this.searchValue}`)
     },
 
     // 联想记录查询
@@ -72,6 +77,12 @@ export default {
       const sty = `<span style='color:red'>${this.searchValue}</span>`
       // 替换
       return item.replace(re, sty)
+    },
+
+    // 点击联想建议
+    clickSuggestion (item) {
+      this.searchValue = item
+      this.onSearch()
     }
   }
 }

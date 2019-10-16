@@ -28,6 +28,11 @@ export default new Router({
       name: 'search', // 搜索
       path: '/search',
       component: () => import('@/views/search')
+    },
+    {
+      name: 'search-result', // 搜索结果
+      path: '/search/:q',
+      component: () => import('@/views/search-result')
     }
   ]
 })
