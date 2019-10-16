@@ -151,29 +151,23 @@ export default {
     // 获取用户默认的频道列表
     async loadChannels () {
       const { data } = await getChannels()
-      data.channels.forEach(channel => {
-        channel.articles = [] // 频道的文章列表
-        channel.loading = false // 频道的上拉加载更多的 loading 状态
-        channel.finished = false // 频道的加载结束的状态
-        channel.timestamp = null // 时间戳
-        channel.pullRefreshLoading = false // 下拉刷新状态
-      })
-      this.channels = data.channels
+      const channels = data.channels
+      // 添加默认数据
+      this.extendData(channels)
+      this.channels = channels
     },
 
     // 获取全部的频道列表
     async getAllChannels () {
       const { data } = await getAllChannels()
-      this.channelsAll = data.channels
+      const channels = data.channels
+      // 添加默认数据
+      this.extendData(channels)
+      this.channelsAll = channels
     },
 
     // 点击推荐频道
     clickRecommended (channel) {
-      channel.articles = [] // 频道的文章列表
-      channel.loading = false // 频道的上拉加载更多的 loading 状态
-      channel.finished = false // 频道的加载结束的状态
-      channel.timestamp = null // 时间戳
-      channel.pullRefreshLoading = false // 下拉刷新状态
       this.channels.push(channel)
     },
 
@@ -190,6 +184,17 @@ export default {
         this.active = index // 跳转到点击频道
         this.isPopupShow = false // 弹出层取消展示
       }
+    },
+
+    // 数据拓展
+    extendData (channels) {
+      channels.forEach(channel => {
+        channel.articles = [] // 频道的文章列表
+        channel.loading = false // 频道的上拉加载更多的 loading 状态
+        channel.finished = false // 频道的加载结束的状态
+        channel.timestamp = null // 时间戳
+        channel.pullRefreshLoading = false // 下拉刷新状态
+      })
     }
   },
 
