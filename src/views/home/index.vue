@@ -1,7 +1,17 @@
 <template>
   <div class="home">
     <!-- 导航栏 -->
-    <van-nav-bar title="首页" fixed />
+    <van-nav-bar fixed>
+      <van-button
+        round
+        type="info"
+        slot="title"
+        size="small"
+        class="searchBtn"
+        icon="search"
+        @click="$router.push('/search')"
+      >搜索</van-button>
+    </van-nav-bar>
 
     <!-- 频道列表 带切换动画和滑动切换-->
     <van-tabs v-model="active" animated swipeable>
@@ -66,7 +76,13 @@
             :text="channel.name"
             @click="clickMyChannel(index)"
           >
-            <van-icon v-show="isEdit" v-if="channel.id!=0" class="close-icon" slot="icon" name="close" />
+            <van-icon
+              v-show="isEdit"
+              v-if="channel.id!=0"
+              class="close-icon"
+              slot="icon"
+              name="close"
+            />
           </van-grid-item>
         </van-grid>
       </div>
@@ -228,6 +244,14 @@ export default {
     justify-content: space-between;
     .meta span {
       margin-right: 10px;
+    }
+  }
+
+  // 搜索按钮
+  .searchBtn {
+    width: 100%;
+    .van-icon {
+      color: #fff;
     }
   }
 
