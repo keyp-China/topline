@@ -18,7 +18,8 @@ import {
   Image, // 图片
   Lazyload, // 图片懒加载
   Popup, // 弹出层
-  Icon // 图标
+  Icon, // 图标
+  search // 搜索
 } from 'vant'
 
 Vue
@@ -40,3 +41,4 @@ Vue
   .use(Lazyload)
   .use(Popup)
   .use(Icon)
+  .use(search)
