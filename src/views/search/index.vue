@@ -49,6 +49,7 @@
 <script>
 import { searchSuggestion } from '@/api/search'
 import { getItem, setItem } from '@/utils/storage'
+import { debounce } from 'lodash'
 
 export default {
   name: 'SearchIndex',
@@ -93,14 +94,15 @@ export default {
     },
 
     // 联想记录查询
-    async searchSuggestion () {
+    // async searchSuggestion () {
+    searchSuggestion: debounce(async function () {
       if (this.searchValue.trim()) {
         const { data } = await searchSuggestion({ q: this.searchValue })
         this.suggestionList = data.options
       } else {
         this.suggestionList = []
       }
-    },
+    }, 500),
 
     // 高亮数据展示
     highLight (item) {
