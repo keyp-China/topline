@@ -14,7 +14,7 @@
     <!-- /搜索框 -->
 
     <!-- 联想建议 -->
-    <van-cell-group>
+    <van-cell-group v-if="searchValue">
       <van-cell
         icon="search"
         v-for="(item,index) in suggestionList"
@@ -26,16 +26,16 @@
     </van-cell-group>
 
     <!-- 搜索记录 -->
-    <van-cell-group>
+    <van-cell-group v-else>
       <van-cell title="历史记录">
-        <template>
+        <template v-if="isDelete">
           <span>全部删除</span>&nbsp;&nbsp;&nbsp;
-          <span>完成</span>
+          <span @click="isDelete = false">完成</span>
         </template>
-        <van-icon name="delete" />
+        <van-icon name="delete" @click="isDelete = true" v-else />
       </van-cell>
       <van-cell title="搜索记录">
-        <van-icon name="close" />
+        <van-icon name="close" v-show="isDelete"/>
       </van-cell>
     </van-cell-group>
   </div>
@@ -49,14 +49,17 @@ export default {
   data () {
     return {
       searchValue: '', // 搜索值
-      suggestionList: [] // 联想建议
+      suggestionList: [], // 联想建议
+      isDelete: false // 是否删除状态
     }
   },
 
   methods: {
     // 搜索
     onSearch () {
-      this.$router.push(`/search/${this.searchValue}`)
+      if (this.searchValue.trim()) {
+        this.$router.push(`/search/${this.searchValue}`)
+      }
     },
 
     // 联想记录查询
