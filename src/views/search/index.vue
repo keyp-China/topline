@@ -15,7 +15,9 @@
 
     <!-- 联想建议 -->
     <van-cell-group>
-      <van-cell  :title="item" icon="search" v-for="(item,index) in suggestionList" :key="index"/>
+      <van-cell icon="search" v-for="(item,index) in suggestionList" :key="index">
+          <div slot="title" v-html="highLight(item)"></div>
+      </van-cell>
     </van-cell-group>
 
     <!-- 搜索记录 -->
@@ -60,6 +62,16 @@ export default {
       } else {
         this.suggestionList = []
       }
+    },
+
+    // 高亮数据展示
+    highLight (item) {
+      // 匹配正则
+      const re = new RegExp(this.searchValue, 'g')
+      // 给文本添加高亮
+      const sty = `<span style='color:red'>${this.searchValue}</span>`
+      // 替换
+      return item.replace(re, sty)
     }
   }
 }
