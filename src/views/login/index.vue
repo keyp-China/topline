@@ -82,7 +82,7 @@ export default {
         // 本地存储
         setItem('user', data)
         this.$toast.success('登录成功')
-        this.$router.push('/home')
+        this.$router.push('/')
       } catch (err) {
         toast.clear()
         if (err.response && err.response.status === 400) {

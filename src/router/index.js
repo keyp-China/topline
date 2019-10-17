@@ -6,11 +6,7 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
-      redirect: 'home' // 重定向
-    },
-    {
-      path: '/home', // 首页
+      path: '/', // 首页
       component: () => import('@/views/tabbar'),
       children: [
         {
@@ -33,6 +29,11 @@ export default new Router({
       name: 'search-result', // 搜索结果
       path: '/search/:q',
       component: () => import('@/views/search-result')
+    },
+    {
+      name: 'article', // 文章详情
+      path: '/article/:articleId',
+      component: () => import('@/views/article')
     }
   ]
 })
