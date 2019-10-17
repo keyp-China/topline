@@ -17,3 +17,13 @@ export function getArticles ({ channelId, timestamp, withTop }) {
     }
   })
 }
+
+/**
+ * 获取文章详情
+ */
+export function getArticle (articleId) {
+  return request({
+    method: 'GET',
+    url: `/app/v1_0/articles/${articleId}`
+  })
+}
