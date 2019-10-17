@@ -16,7 +16,11 @@
           <p style="color: #363636;">{{ item.content }}</p>
           <p>
             <span style="margin-right: 10px;">{{ item.pubdate | relativeTime }}</span>
-            <van-button size="mini" type="default" @click="onReplyShow">回复 {{ item.reply_count }}</van-button>
+            <van-button
+              size="mini"
+              type="default"
+              @click="onReplyShow(item)"
+            >回复 {{ item.reply_count }}</van-button>
           </p>
         </div>
         <van-icon
@@ -38,7 +42,7 @@
 
     <!-- 评论回复 -->
     <van-popup v-model="isReplyShow" round position="bottom" :style="{ height: '90%' }">
-      <comment-reply />
+      <comment-reply :comment="currentComment" />
     </van-popup>
     <!-- /评论回复 -->
   </div>
@@ -61,7 +65,8 @@ export default {
       loading: false, // 上拉加载更多的 loading
       finished: false, // 是否加载结束
       commentText: '', // 发布内容
-      isReplyShow: false // 评论弹窗是否展示
+      isReplyShow: false, // 评论弹窗是否展示
+      currentComment: {} // 查看回复的当前评论
     }
   },
 
@@ -136,7 +141,8 @@ export default {
     /**
      * 展示回复弹层
      */
-    onReplyShow () {
+    onReplyShow (comment) {
+      this.currentComment = comment
       this.isReplyShow = true
     }
   }
