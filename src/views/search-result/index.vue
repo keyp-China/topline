@@ -46,7 +46,7 @@ export default {
       // 3.加载状态结束
       this.loading = false
       // 4.判断是否还有数据
-      if (data.page) {
+      if (data.results.length) {
         this.page++
       } else {
         this.finished = true
