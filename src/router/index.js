@@ -12,7 +12,12 @@ export default new Router({
         {
           path: '', // 默认子路由
           component: () => import('@/views/home')
+        },
+        {
+          path: '/mine', // 我的
+          component: () => import('@/views/mine')
         }
+
       ]
     },
     {
@@ -34,11 +39,6 @@ export default new Router({
       name: 'article', // 文章详情
       path: '/article/:articleId',
       component: () => import('@/views/article')
-    },
-    {
-      name: 'mine', // 我的
-      path: '/mine',
-      component: () => import('@/views/mine')
     }
   ]
 })
