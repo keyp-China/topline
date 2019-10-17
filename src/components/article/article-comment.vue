@@ -1,17 +1,8 @@
 <template>
   <div class="article-comments">
     <!-- 评论列表 -->
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-    >
-      <van-cell
-        v-for="(item,index) in list"
-        :key="index"
-        :title="item.aut_name"
-      >
+    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+      <van-cell v-for="(item,index) in list" :key="index" :title="item.aut_name">
         <van-image
           slot="icon"
           round
@@ -28,19 +19,19 @@
             <van-button size="mini" type="default">回复 {{ item.reply_count }}</van-button>
           </p>
         </div>
-        <van-icon slot="right-icon" name="like-o" />
+        <van-icon
+          slot="right-icon"
+          :name="item.is_liking ? 'like' : 'like-o'"
+          @click="onCommentLike(item)"
+        />
       </van-cell>
     </van-list>
     <!-- 评论列表 -->
 
     <!-- 发布评论 -->
     <van-cell-group class="publish-wrap">
-      <van-field
-        clearable
-        placeholder="请输入评论内容"
-        v-model="commentText"
-      >
-        <van-button slot="button" size="mini" type="info"  @click="onAddComment">发布</van-button>
+      <van-field clearable placeholder="请输入评论内容" v-model="commentText">
+        <van-button slot="button" size="mini" type="info" @click="onAddComment">发布</van-button>
       </van-field>
     </van-cell-group>
     <!-- /发布评论 -->
@@ -48,7 +39,12 @@
 </template>
 
 <script>
-import { getComments, addComment } from '@/api/comment'
+import {
+  getComments,
+  addComment,
+  addCommentLike,
+  deleteCommentLike
+} from '@/api/comment'
 
 export default {
   name: 'ArticleComment',
@@ -109,6 +105,21 @@ export default {
 
       // 清空文本框
       this.commentText = ''
+    },
+
+    /**
+     * 评论点赞/取消评论点赞
+     */
+    async onCommentLike (comment) {
+      const commentId = comment.com_id.toString()
+      // 如果已点赞，则取消点赞
+      if (comment.is_liking) {
+        await deleteCommentLike(commentId)
+      } else {
+        // 否则，点赞
+        await addCommentLike(commentId)
+      }
+      comment.is_liking = !comment.is_liking
     }
   }
 }
