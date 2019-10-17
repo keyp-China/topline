@@ -143,9 +143,9 @@ export default {
 
       // 请求提交
       const { data } = await addComment({
-        target: this.$route.params.articleId, // 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
-        content: commentText // 评论内容
-        // art_id // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数。
+        target: this.comment.com_id.toString(), // 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
+        content: commentText, // 评论内容
+        art_id: this.$route.params.articleId // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数。
       })
 
       // 将最新添加的评论数据放到顶部展示
@@ -153,6 +153,9 @@ export default {
 
       // 清空文本框
       this.commentText = ''
+
+      // 更新当前评论的回复数量
+      this.comment.reply_count++
     },
 
     /**
