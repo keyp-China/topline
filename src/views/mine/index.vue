@@ -1,15 +1,7 @@
 <template>
   <div>
-    <!-- 未登录 -->
-    <div class="not-login">
-      <div class="circle" @click="$router.push({ name: 'login' })">
-        <span>登录</span>
-      </div>
-    </div>
-    <!-- /未登录 -->
-
     <!-- 用户信息 -->
-    <van-cell-group class="user-info">
+    <van-cell-group class="user-info" v-if="$store.state.user">
       <van-cell
         class="base-info"
         is-link :border="false"
@@ -41,6 +33,15 @@
     </van-cell-group>
     <!-- /用户信息 -->
 
+    <!-- 未登录 -->
+    <div class="not-login" v-else>
+      <!-- <div class="circle" @click="$router.push('/login')"> -->
+      <div class="circle" @click="$router.push({ name: 'login' })">
+        <span>登录</span>
+      </div>
+    </div>
+    <!-- /未登录 -->
+
     <!-- 其它 -->
     <van-cell-group>
       <van-grid clickable>
@@ -61,11 +62,24 @@
 </template>
 
 <script>
+import { getSelf } from '@/api/user'
+
 export default {
   name: 'UserIndex',
   data () {
     return {
       user: {} // 用户信息对象
+    }
+  },
+
+  created () {
+    this.loadSelf()
+  },
+
+  methods: {
+    async loadSelf () {
+      const { data } = await getSelf()
+      this.user = data
     }
   }
 }
