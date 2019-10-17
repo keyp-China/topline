@@ -42,7 +42,7 @@
 
     <!-- 评论回复 -->
     <van-popup v-model="isReplyShow" round position="bottom" :style="{ height: '90%' }">
-      <comment-reply :comment="currentComment" />
+      <comment-reply :comment="currentComment" v-if="isReplyShow"/>
     </van-popup>
     <!-- /评论回复 -->
   </div>

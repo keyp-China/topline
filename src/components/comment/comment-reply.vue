@@ -49,15 +49,11 @@
           style="margin-right: 10px;"
           :src="item.aut_photo"
         />
-        <span style="color: #466b9d;" slot="title">hello</span>
+        <span style="color: #466b9d;" slot="title">{{ item.aut_name }}</span>
         <div slot="label">
           <p style="color: #363636;">{{ item.content }}</p>
           <p>
             <span style="margin-right: 10px;">{{ item.pubdate | relativeTime }}</span>
-            <van-button
-              size="mini"
-              type="default"
-            >回复 {{ item.reply_count }}</van-button>
           </p>
         </div>
         <van-icon
@@ -113,8 +109,8 @@ export default {
     async onLoad () {
       // 1. 请求获取数据
       const { data } = await getComments({
-        type: 'a', // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
-        source: this.$route.params.articleId, // 源id，文章id或评论id
+        type: 'c', // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
+        source: this.comment.com_id.toString(), // 源id，文章id或评论id
         offset: this.offset // 获取评论数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
         // limit // 获取的评论数据个数，不传表示采用后端服务设定的默认每页数据量
       })
