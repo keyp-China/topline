@@ -1,8 +1,46 @@
 <template>
   <div class="article-comments">
-    <!-- 评论列表 -->
-    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-      <van-cell v-for="(item,index) in list" :key="index" :title="item.aut_name">
+    <!-- 导航栏 -->
+    <van-nav-bar title="1条回复">
+      <van-icon slot="left" name="cross" />
+    </van-nav-bar>
+    <!-- /导航栏 -->
+
+    <!-- 当前评论 -->
+    <van-cell title="当前评论">
+      <van-image
+        slot="icon"
+        round
+        width="30"
+        height="30"
+        style="margin-right: 10px;"
+        src=""
+      />
+      <span style="color: #466b9d;" slot="title">hello</span>
+      <div slot="label">
+        <p style="color: #363636;">评论内容</p>
+        <p>
+          <span style="margin-right: 10px;">几天前</span>
+        </p>
+      </div>
+      <van-icon slot="right-icon" />
+    </van-cell>
+    <!-- /当前评论 -->
+
+    <van-cell title="全部评论" />
+
+    <!-- 回复列表 -->
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+    >
+      <van-cell
+        v-for="(item, index) in list"
+        :key="index"
+        :title="item.aut_name"
+      >
         <van-image
           slot="icon"
           round
@@ -11,12 +49,15 @@
           style="margin-right: 10px;"
           :src="item.aut_photo"
         />
-        <span style="color: #466b9d;" slot="title">{{item.aut_name}}</span>
+        <span style="color: #466b9d;" slot="title">hello</span>
         <div slot="label">
           <p style="color: #363636;">{{ item.content }}</p>
           <p>
             <span style="margin-right: 10px;">{{ item.pubdate | relativeTime }}</span>
-            <van-button size="mini" type="default" @click="onReplyShow">回复 {{ item.reply_count }}</van-button>
+            <van-button
+              size="mini"
+              type="default"
+            >回复 {{ item.reply_count }}</van-button>
           </p>
         </div>
         <van-icon
@@ -26,21 +67,24 @@
         />
       </van-cell>
     </van-list>
-    <!-- 评论列表 -->
+    <!-- 回复列表 -->
 
-    <!-- 发布评论 -->
+    <!-- 发布回复 -->
     <van-cell-group class="publish-wrap">
-      <van-field clearable placeholder="请输入评论内容" v-model="commentText">
-        <van-button slot="button" size="mini" type="info" @click="onAddComment">发布</van-button>
+      <van-field
+        v-model="commentText"
+        clearable
+        placeholder="请输入评论内容"
+      >
+        <van-button
+          slot="button"
+          size="mini"
+          type="info"
+          @click="onAddComment"
+        >发布</van-button>
       </van-field>
     </van-cell-group>
-    <!-- /发布评论 -->
-
-    <!-- 评论回复 -->
-    <van-popup v-model="isReplyShow" round position="bottom" :style="{ height: '90%' }">
-      <comment-reply />
-    </van-popup>
-    <!-- /评论回复 -->
+    <!-- /发布回复 -->
   </div>
 </template>
 
@@ -51,22 +95,18 @@ import {
   addCommentLike,
   deleteCommentLike
 } from '@/api/comment'
-import CommentReply from '@/components/comment/comment-reply'
+
 export default {
   name: 'ArticleComment',
-  props: ['articleId'],
+  props: {},
   data () {
     return {
       list: [], // 评论列表
       loading: false, // 上拉加载更多的 loading
       finished: false, // 是否加载结束
-      commentText: '', // 发布内容
-      isReplyShow: false // 评论弹窗是否展示
+      offset: null,
+      commentText: ''
     }
-  },
-
-  components: {
-    CommentReply
   },
 
   methods: {
@@ -74,7 +114,7 @@ export default {
       // 1. 请求获取数据
       const { data } = await getComments({
         type: 'a', // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
-        source: this.articleId, // 源id，文章id或评论id
+        source: this.$route.params.articleId, // 源id，文章id或评论id
         offset: this.offset // 获取评论数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
         // limit // 获取的评论数据个数，不传表示采用后端服务设定的默认每页数据量
       })
@@ -104,10 +144,11 @@ export default {
       if (!commentText) {
         return
       }
+
       // 请求提交
       const { data } = await addComment({
         target: this.$route.params.articleId, // 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
-        content: commentText
+        content: commentText // 评论内容
         // art_id // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数。
       })
 
