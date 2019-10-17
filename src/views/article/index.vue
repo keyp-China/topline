@@ -56,7 +56,12 @@
       </p>
     </div>
     <!-- /加载失败的消息提示 -->
+
+    <!-- 文章评论 -->
+    <ArticleComment />
+  <!-- /文章评论 -->
   </div>
+
 </template>
 
 <script>
@@ -68,6 +73,7 @@ import {
   deleteDislike
 } from '@/api/article'
 import { followUser, unFollowUser } from '@/api/user'
+import ArticleComment from '@/components/article/article-comment'
 
 export default {
   name: 'ArticleIndex',
@@ -76,6 +82,10 @@ export default {
       loading: true, // 控制加载中的 loading 状态
       article: {} // 文章详情
     }
+  },
+
+  components: {
+    ArticleComment
   },
 
   created () {
