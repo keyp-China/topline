@@ -26,7 +26,15 @@
       </div>
       <div class="content" v-html="article.content"></div>
       <div class="zan">
-        <van-button round size="small" hairline type="primary" plain icon="good-job-o">点赞</van-button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <van-button
+          round
+          size="small"
+          hairline
+          type="primary"
+          plain
+          :icon="article.attitude === 1 ? 'good-job' : 'good-job-o'"
+          @click="onLike"
+        >{{ article.attitude === 1 ? '取消点赞' : '+ 点赞' }}</van-button>&nbsp;&nbsp;&nbsp;&nbsp;
         <van-button round size="small" hairline type="danger" plain icon="delete">不喜欢</van-button>
       </div>
     </div>
@@ -44,7 +52,7 @@
 </template>
 
 <script>
-import { getArticle } from '@/api/article'
+import { getArticle, addLike, deleteLike } from '@/api/article'
 import { followUser, unFollowUser } from '@/api/user'
 
 export default {
@@ -62,7 +70,23 @@ export default {
 
   methods: {
     /**
-     * 点击关注按钮
+     * 点赞与取消点赞
+     */
+    async onLike () {
+      const articleId = this.article.art_id.toString()
+      // 如果已赞，则取消点赞
+      if (this.article.attitude === 1) {
+        await deleteLike(articleId)
+        this.article.attitude = -1
+      } else {
+        // 否则点赞
+        await addLike(articleId)
+        this.article.attitude = 1
+      }
+    },
+
+    /**
+     * 关注与取消关注
      */
     async onFollowUser () {
       // 如果关注了
