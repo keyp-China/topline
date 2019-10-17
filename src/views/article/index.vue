@@ -58,7 +58,7 @@
     <!-- /加载失败的消息提示 -->
 
     <!-- 文章评论 -->
-    <ArticleComment />
+    <ArticleComment :article-id="$route.params.articleId" />
   <!-- /文章评论 -->
   </div>
 
