@@ -34,6 +34,11 @@ export default new Router({
       name: 'article', // 文章详情
       path: '/article/:articleId',
       component: () => import('@/views/article')
+    },
+    {
+      name: 'mine', // 我的
+      path: '/mine',
+      component: () => import('@/views/mine')
     }
   ]
 })
