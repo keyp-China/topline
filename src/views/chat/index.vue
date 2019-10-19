@@ -6,17 +6,22 @@
 
     <!-- 消息列表 -->
     <div class="message-list" ref="message-list">
-      <div class="message-item" :class="{ reverse: item % 3 === 0 }" v-for="item in 20" :key="item">
+      <div
+        class="message-item"
+        :class="{ reverse: item.isMe }"
+        v-for="(item,index) in messages"
+        :key="index"
+      >
         <van-image
           class="avatar"
           slot="icon"
           round
           width="30"
           height="30"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
+          :src="item.photo"
         />
         <div class="title">
-          <span>{{ `hello${item}` }}</span>
+          <span>{{ item.message }}</span>
         </div>
       </div>
     </div>
@@ -25,7 +30,7 @@
     <!-- 发送消息 -->
     <van-cell-group class="send-message">
       <van-field v-model="message" center clearable>
-        <van-button slot="button" size="small" type="primary">发送</van-button>
+        <van-button slot="button" size="small" type="primary" @click="onSendMessage">发送</van-button>
       </van-field>
     </van-cell-group>
     <!-- /发送消息 -->
@@ -33,15 +38,83 @@
 </template>
 
 <script>
+import io from 'socket.io-client'
+import { getItem, setItem } from '@/utils/storage'
+
 export default {
   data () {
     return {
-      message: ''
+      message: '',
+      socket: null,
+      // [ { message: '消息数据', isMe: true, photo: '头像' }, ]
+      messages: getItem('chat-message') || [] // 存储所有的消息列表
     }
   },
 
+  created () {
+    // 建立连接
+    const socket = io('http://ttapi.research.itcast.cn')
+    this.socket = socket
+
+    // 当客户端与服务器建立连接成功，触发 connect 事件
+    socket.on('connect', () => {})
+
+    socket.on('message', data => {
+      this.messages.push({
+        message: data.msg,
+        isMe: false,
+        photo: 'http://toutiao.meiduo.site/FtyZJDTPBFAVEPB7FwBB6Cg9y71F'
+      })
+    })
+  },
+
   mounted () {
-    window.list = this.$refs['message-list']
+    // 让列表滚动到最底部
+    const messageList = this.$refs['message-list']
+    messageList.scrollTop = messageList.scrollHeight
+  },
+
+  watch: {
+    messages (newValue) {
+      setItem('chat-message', newValue)
+
+      // 让列表滚动到最底部
+      const messageList = this.$refs['message-list']
+
+      // 这里需要把操作 DOM 的这个代码放到 $nextTick 中
+      // 为啥？明天再说
+      this.$nextTick(() => {
+        messageList.scrollTop = messageList.scrollHeight
+      })
+    }
+
+  },
+
+  methods: {
+    /**
+     * 发送按钮
+     */
+    onSendMessage () {
+      const message = this.message.trim()
+      if (!message) {
+        return
+      }
+      // 发送消息
+      this.socket.emit('message', {
+        msg: message,
+        timestamp: Date.now()
+      })
+
+      // 把消息存储到数组中
+      this.messages.push({
+        message,
+        isMe: true,
+        photo: 'https://img.yzcdn.cn/vant/cat.jpeg'
+      })
+
+      // 清空文本框
+      this.message = ''
+    }
   }
 }
 </script>
