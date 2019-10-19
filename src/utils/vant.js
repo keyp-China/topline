@@ -22,7 +22,8 @@ import {
   search, // 搜索
   Loading, // 加载
   Dialog, // 弹出框
-  ActionSheet // 上拉菜单
+  ActionSheet, // 上拉菜单
+  DatetimePicker // 时间选择
 } from 'vant'
 
 Vue
@@ -48,3 +49,4 @@ Vue
   .use(Loading)
   .use(Dialog)
   .use(ActionSheet)
+  .use(DatetimePicker)

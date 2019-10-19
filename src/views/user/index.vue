@@ -12,7 +12,7 @@
         is-link
         @click="isEditGenderShow = true"
       />
-      <van-cell title="生日" :value="user.birthday" is-link />
+      <van-cell title="生日" :value="user.birthday" is-link @click="isEditBirthdayShow = true" />
     </van-cell-group>
 
     <!-- 上传头像文件 隐藏 -->
@@ -35,11 +35,23 @@
       cancel-text="取消"
       @select="onSelect"
     />
+
+    <!-- 编辑用户生日 -->
+    <van-popup v-model="isEditBirthdayShow" position="bottom" :style="{ height: '35%' }">
+      <van-datetime-picker
+        type="date"
+        @confirm="onUserBirthdayConfirm"
+        @cancel="isEditBirthdayShow = false"
+        :min-date="minDate"
+        :max-date="maxDate"
+      />
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { getProfile, updateUserPhoto } from '@/api/user'
+import dayjs from 'dayjs'
 
 export default {
   name: 'UserIndex',
@@ -49,7 +61,10 @@ export default {
       userName: '', // 存储编译userName的值
       isEditNameShow: false, // 昵称修改是否显示
       isEditGenderShow: false, // 性别修改是否显示
-      actions: [{ name: '男', value: 0 }, { name: '女', value: 1 }]
+      actions: [{ name: '男', value: 0 }, { name: '女', value: 1 }],
+      isEditBirthdayShow: false, // 编辑生日是否显示
+      minDate: new Date(1900, 0, 1),
+      maxDate: new Date()
     }
   },
 
@@ -125,6 +140,16 @@ export default {
     onSelect (item) {
       this.user.gender = item.value
       this.isEditGenderShow = false
+    },
+
+    /**
+     * 生日选择确定事件
+     */
+    onUserBirthdayConfirm (value) {
+      // 更新数据
+      this.user.birthday = dayjs(value).format('YYYY-MM-DD')
+      // 关闭弹层
+      this.isEditBirthdayShow = false
     }
   }
 }
