@@ -20,7 +20,8 @@ import {
   Popup, // 弹出层
   Icon, // 图标
   search, // 搜索
-  Loading // 加载
+  Loading, // 加载
+  Dialog // 弹出框
 } from 'vant'
 
 Vue
@@ -44,3 +45,4 @@ Vue
   .use(Icon)
   .use(search)
   .use(Loading)
+  .use(Dialog)
