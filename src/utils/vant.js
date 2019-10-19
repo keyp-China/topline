@@ -21,7 +21,8 @@ import {
   Icon, // 图标
   search, // 搜索
   Loading, // 加载
-  Dialog // 弹出框
+  Dialog, // 弹出框
+  ActionSheet // 上拉菜单
 } from 'vant'
 
 Vue
@@ -46,3 +47,4 @@ Vue
   .use(search)
   .use(Loading)
   .use(Dialog)
+  .use(ActionSheet)

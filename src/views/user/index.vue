@@ -5,8 +5,13 @@
       <van-cell title="头像" is-link @click="onChangePhoto">
         <van-image round width="30" height="30" :src="user.photo" />
       </van-cell>
-      <van-cell title="昵称" :value="user.name" is-link @click="isEditNameShow = true"/>
-      <van-cell title="性别" :value="user.gender ? '男': '女' " is-link />
+      <van-cell title="昵称" :value="user.name" is-link @click="isEditNameShow = true" />
+      <van-cell
+        title="性别"
+        :value="user.gender ? '女': '男' "
+        is-link
+        @click="isEditGenderShow = true"
+      />
       <van-cell title="生日" :value="user.birthday" is-link />
     </van-cell-group>
 
@@ -22,6 +27,14 @@
     >
       <van-field placeholder="请输入用户名" :value="user.name" @input="onUserNameInput" />
     </van-dialog>
+
+    <!-- 编辑用户昵称上拉菜单 -->
+    <van-action-sheet
+      v-model="isEditGenderShow"
+      :actions="actions"
+      cancel-text="取消"
+      @select="onSelect"
+    />
   </div>
 </template>
 
@@ -34,7 +47,9 @@ export default {
     return {
       user: {}, // 用户
       userName: '', // 存储编译userName的值
-      isEditNameShow: false // 昵称修改是否显示
+      isEditNameShow: false, // 昵称修改是否显示
+      isEditGenderShow: false, // 性别修改是否显示
+      actions: [{ name: '男', value: 0 }, { name: '女', value: 1 }]
     }
   },
 
@@ -102,8 +117,15 @@ export default {
      */
     onUserNameInput (newName) {
       this.userName = newName
-    }
+    },
 
+    /**
+     * 性别选择事件
+     */
+    onSelect (item) {
+      this.user.gender = item.value
+      this.isEditGenderShow = false
+    }
   }
 }
 </script>
