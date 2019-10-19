@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="个人信息" left-arrow right-text="保存" @click-right="onSave" />
+    <van-nav-bar title="个人信息" left-arrow right-text="保存" @click-right="onSave" @click-left="$router.back()"/>
     <van-cell-group>
       <van-cell title="头像" is-link @click="onChangePhoto">
         <van-image round width="30" height="30" :src="user.photo" />
