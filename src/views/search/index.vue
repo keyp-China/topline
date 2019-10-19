@@ -9,7 +9,7 @@
       @search="onSearch"
       @input="searchSuggestion"
     >
-      <div slot="action" @click="onSearch">搜索</div>
+      <div slot="action" @click="$router.back()">取消</div>
     </van-search>
     <!-- /搜索框 -->
 
