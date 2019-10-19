@@ -11,18 +11,36 @@
           round
           width="30"
           height="30"
-          src="http://toutiao.meiduo.site/FgSTA3msGyxp5-Oufnm5c0kjVgW7"
+          :src="user.photo"
         />
       </van-cell>
-      <van-cell title="昵称" value="abc" is-link />
-      <van-cell title="性别" value="男" is-link />
-      <van-cell title="生日" value="2019-9-27" is-link />
+      <van-cell title="昵称" :value="user.name" is-link />
+      <van-cell title="性别" :value="user.gender ? '男': '女' " is-link />
+      <van-cell title="生日" :value="user.birthday" is-link />
     </van-cell-group>
   </div>
 </template>
 
 <script>
+import { getProfile } from '@/api/user'
+
 export default {
-  name: 'UserIndex'
+  name: 'UserIndex',
+  data () {
+    return {
+      user: {}
+    }
+  },
+
+  created () {
+    this.loadUser()
+  },
+
+  methods: {
+    async loadUser () {
+      const { data } = await getProfile()
+      this.user = data
+    }
+  }
 }
 </script>
