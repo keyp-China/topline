@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { getProfile, updateUserPhoto } from '@/api/user'
+import { getProfile, updateUserPhoto, updateUserProfile } from '@/api/user'
 import dayjs from 'dayjs'
 
 export default {
@@ -108,15 +108,23 @@ export default {
         loadingType: 'spinner',
         message: '保存中'
       })
-      const photo = this.$refs['photoFile'].files[0]
-      if (photo) {
-        try {
+
+      try {
+        const photo = this.$refs['photoFile'].files[0]
+        if (photo) {
           const fd = new FormData()
           fd.append('photo', photo)
           await updateUserPhoto(fd)
-        } catch (err) {
-          this.$toast.fail('保存失败')
         }
+        // 保存基本信息
+        await updateUserProfile({
+          name: this.user.name,
+          gender: this.user.gender,
+          birthday: this.user.birthday
+        })
+        this.$toast.success('保存成功')
+      } catch (err) {
+        this.$toast.fail('保存失败')
       }
     },
 
