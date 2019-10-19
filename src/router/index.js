@@ -39,6 +39,11 @@ export default new Router({
       name: 'article', // 文章详情
       path: '/article/:articleId',
       component: () => import('@/views/article')
+    },
+    {
+      name: 'user', // 个人信息
+      path: '/user',
+      component: () => import('@/views/user')
     }
   ]
 })
