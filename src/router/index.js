@@ -44,6 +44,11 @@ export default new Router({
       name: 'user', // 个人信息
       path: '/user',
       component: () => import('@/views/user')
+    },
+    {
+      name: 'chat', // 智能机器人
+      path: '/chat',
+      component: () => import('@/views/chat')
     }
   ]
 })
