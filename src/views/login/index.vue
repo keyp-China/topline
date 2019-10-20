@@ -79,7 +79,12 @@ export default {
         // vuex容器存储
         this.$store.commit('setUser', data)
         this.$toast.success('登录成功')
-        this.$router.push(this.$route.query.redirect || '/')
+        if (this.$route.query.redirect) {
+          this.$router.go(-1)
+        } else {
+          this.$router.push('/')
+        }
+        // this.$router.push(this.$route.query.redirect || '/')
       } catch (err) {
         toast.clear()
         if (err.response && err.response.status === 400) {
