@@ -1,6 +1,7 @@
 import axios from 'axios'
 import jsonBig from 'json-bigint'
 import store from '@/store'
+import router from '@/router'
 
 const request = axios.create({
   // 设置默认axios请求地址
@@ -35,6 +36,39 @@ request.interceptors.request.use(function (config) {
 request.interceptors.response.use(function (response) {
   // 对响应数据做处理
   return response.data
+}, async function (err) { // 处理状态码 >=400的
+  // 判断错误是否是401
+  if (err.response || err.response.status === 401) {
+    const { user } = store.state
+    debugger
+    if (!user) {
+      router.push({
+        name: 'login'
+      })
+    } else {
+      try {
+        // 使用refresh_token获取新的token
+        const { data } = await axios({
+          url: 'http://ttapi.research.itcast.cn/app/v1_0/authorizations',
+          method: 'put',
+          headers: { Authorization: `Bearer ${user.refresh_token}` }
+        })
+        // 将新获取的token放入vuex容器中
+        store.commit('setUser', {
+          token: data.data.token,
+          refresh_token: user.refresh_token
+        })
+
+        // 重新去发送上一次请求
+        return request(err.config)
+      } catch (err) {
+        // 获取新的token失败进入登录页面
+        router.push({
+          name: 'login'
+        })
+      }
+    }
+  }
 })
 
 export default request
