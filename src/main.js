@@ -11,6 +11,9 @@ import '@/utils/veeValidate' // vee-validate校验规则
 
 import '@/utils/day' // dayjs时间处理
 
+import fastClick from 'fastclick' // 解决移动端点击 300ms 延迟
+fastClick.attach(document.body)
+
 Vue.config.productionTip = false
 
 new Vue({
