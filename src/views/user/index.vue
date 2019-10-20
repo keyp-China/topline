@@ -52,6 +52,7 @@
         @cancel="isEditBirthdayShow = false"
         :min-date="minDate"
         :max-date="maxDate"
+        :value="new Date(user.birthday)"
       />
     </van-popup>
   </div>
