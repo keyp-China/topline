@@ -40,10 +40,12 @@ request.interceptors.response.use(function (response) {
   // 判断错误是否是401
   if (err.response || err.response.status === 401) {
     const { user } = store.state
-    debugger
     if (!user) {
       router.push({
-        name: 'login'
+        name: 'login',
+        query: {
+          redirect: router.currentRoute.fullPath
+        }
       })
     } else {
       try {
@@ -64,7 +66,10 @@ request.interceptors.response.use(function (response) {
       } catch (err) {
         // 获取新的token失败进入登录页面
         router.push({
-          name: 'login'
+          name: 'login',
+          query: {
+            redirect: router.currentRoute.fullPath
+          }
         })
       }
     }
