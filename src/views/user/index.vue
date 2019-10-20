@@ -1,6 +1,12 @@
 <template>
   <div>
-    <van-nav-bar title="个人信息" left-arrow right-text="保存" @click-right="onSave" @click-left="$router.back()"/>
+    <van-nav-bar
+      title="个人信息"
+      left-arrow
+      right-text="保存"
+      @click-right="onSave"
+      @click-left="$router.back()"
+    />
     <van-cell-group>
       <van-cell title="头像" is-link @click="onChangePhoto">
         <van-image round width="30" height="30" :src="user.photo" />
@@ -12,7 +18,9 @@
         is-link
         @click="isEditGenderShow = true"
       />
-      <van-cell title="生日" :value="user.birthday" is-link @click="isEditBirthdayShow = true" />
+      <van-cell title="生日" is-link @click="isEditBirthdayShow = true">
+        <span v-html="user.birthday ? user.birthday : waitComplete"></span>
+      </van-cell>
     </van-cell-group>
 
     <!-- 上传头像文件 隐藏 -->
@@ -64,7 +72,8 @@ export default {
       actions: [{ name: '男', value: 0 }, { name: '女', value: 1 }],
       isEditBirthdayShow: false, // 编辑生日是否显示
       minDate: new Date(1900, 0, 1),
-      maxDate: new Date()
+      maxDate: new Date(),
+      waitComplete: '<span style="color:red">待完善</span>'
     }
   },
 
