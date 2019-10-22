@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import 'amfe-flexible/index.js' // 动态设置 html 标签的字体大小
+
 import '@/styles/index.less' // 导入全局样式
 
 import '@/utils/vant' // vant提取
